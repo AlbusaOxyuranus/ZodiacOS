@@ -6,6 +6,6 @@ BIOS_LOADER_BIN=bios.bin
 PATH_BIN=bin
 
 all: 
-	#$(ASM) $(LOADERS_PATH)/$(BIOS_LOADER) $(PATH_BIN)/$(BIOS_LOADER_BIN)
-	fasm.x64 bootloader/bios.asm bios.bin
+	$(ASM) $(LOADERS_PATH)/$(BIOS_LOADER) $(PATH_BIN)/$(BIOS_LOADER_BIN)
+	
 	
