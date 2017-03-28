@@ -1,10 +1,7 @@
 {
   "ExpandedNodes": [
     "",
-    "\\source",
-    "\\source\\bin",
-    "\\source\\bootloader",
-    "\\source\\disk\\system"
+    "\\source"
   ],
   "PreviewInSolutionExplorer": false
 }

@@ -29,4 +29,5 @@
 *.app
 
 #Delete bin files
-
+/bin/*.*
+/bin/*/*.*
