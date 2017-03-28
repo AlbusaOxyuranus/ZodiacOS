@@ -5,7 +5,8 @@ prepare:
 	mkdir ../bin/boot
 	mkdir ../bin/disk
 		
-	
+USB:
+	#dd if=../image/ZodiacOS.img of=/dev/sdX 
 make_build:
 	make -C bootloader/
 	make -C tools/
