@@ -11,7 +11,7 @@ PATH_KERNEL=kernel
 FOLDER_DISK=disk
 PATH_TOOLS=tools
 FS_TOOLS=fs_tools
-FS_TOOLS_EXT=FS_TOOLS.tls
+FS_TOOLS_EXT=$(FS_TOOLS).tls
 IMAGE=ZodiacOS.img
 CC=gcc
 
