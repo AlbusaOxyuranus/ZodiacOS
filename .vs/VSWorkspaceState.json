@@ -4,10 +4,7 @@
     "\\source",
     "\\source\\bin",
     "\\source\\bootloader",
-    "\\source\\disk",
-    "\\source\\disk\\system",
-    "\\source\\kernel",
-    "\\source\\tools"
+    "\\source\\disk\\system"
   ],
   "PreviewInSolutionExplorer": false
 }
