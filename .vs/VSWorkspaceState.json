@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
+    "\\image",
     "\\prepare",
     "\\source",
+    "\\source\\bin",
     "\\source\\bootloader"
   ],
   "SelectedNode": "\\source\\bootloader\\bios-boot.asm",
