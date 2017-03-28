@@ -30,3 +30,5 @@
 
 #Delete bin files
 /source/bin/*.*
+/source/disk/*.*
+/source/disk/system/*.*

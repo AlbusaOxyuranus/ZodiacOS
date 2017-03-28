@@ -1,12 +1,14 @@
 {
   "ExpandedNodes": [
     "",
-    "\\image",
-    "\\prepare",
     "\\source",
     "\\source\\bin",
-    "\\source\\bootloader"
+    "\\source\\bootloader",
+    "\\source\\disk",
+    "\\source\\disk\\system",
+    "\\source\\kernel",
+    "\\source\\tools"
   ],
-  "SelectedNode": "\\source\\bootloader\\bios-boot.asm",
+  "SelectedNode": "\\source\\disk\\system\\kernel.bin",
   "PreviewInSolutionExplorer": false
 }
