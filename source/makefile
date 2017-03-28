@@ -1,0 +1,11 @@
+BUILD_IMAGE_FOLDER=~/image
+ASM=fasm.x64
+LOADERS_PATH=bootloader
+BIOS_LOADER=bios.asm
+BIOS_LOADER_BIN=bios.bin
+PATH_BIN=bin
+
+all: 
+	#$(ASM) $(LOADERS_PATH)/$(BIOS_LOADER) $(PATH_BIN)/$(BIOS_LOADER_BIN)
+	fasm.x64 bootloader/bios.asm bios.bin
+	

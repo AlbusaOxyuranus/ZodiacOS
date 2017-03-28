@@ -3,7 +3,7 @@ clear
 sudo wget http://flatassembler.net/fasm-1.71.60.tgz
 sudo tar xfvz  fasm-1.71.60.tgz
 sudo cp -avr fasm /home/denis
-sudo ln -s -f /home/denis/fasm/fasm /usr/local/bin
+sudo ln -s -f /home/denis/fasm/fasm.x64 /usr/local/bin
 sudo rm -r fasm
 sudo rm -v *.tgz.*
 sudo rm -v *.tgz
