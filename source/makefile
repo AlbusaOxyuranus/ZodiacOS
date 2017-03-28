@@ -34,7 +34,7 @@ make_kernel: make_libs
 			$(SCRIPT) --oformat=binary -melf_i386 -T $(PATH_KERNEL)/script.ld -o $(FOLDER_DISK)/kernel.bin $(PATH_BIN)/startup.o $(PATH_BIN)/stdlib.o $(PATH_BIN)/main.o 
 
 make_libs:	
-			gcc -c -m32 -ffreestanding -o $(PATH_BIN)/stdlib.o $(PATH_KERNEL)/stdlib.c
+			$(CC) -c -m32 -ffreestanding -o $(PATH_BIN)/stdlib.o $(PATH_KERNEL)/stdlib.c
 
 make_tools:
 			$(CC) -o $(PATH_BIN)/$(FS_TOOLS_EXT) $(PATH_TOOLS)/$(FS_TOOLS).c
