@@ -62,17 +62,13 @@ bool get_commandline_options(int argc, char **argv) {
 	for (i = 1; i < argc; i++) {
 		if (!strncmp(argv[i], "of=", 3)) {
 			output_file_name = argv[i] + 3;
-		}
-		else if (!strncmp(argv[i], "bs=", 3)) {
+		} else if (!strncmp(argv[i], "bs=", 3)) {
 			block_size = atoi(argv[i] + 3);
-		}
-		else if (!strncmp(argv[i], "size=", 5)) {
+		} else if (!strncmp(argv[i], "size=", 5)) {
 			block_count = atoi(argv[i] + 5);
-		}
-		else if (!strncmp(argv[i], "boot=", 5)) {
+		} else if (!strncmp(argv[i], "boot=", 5)) {
 			boot_loader_file_name = argv[i] + 5;
-		}
-		else if (!strncmp(argv[i], "src=", 4)) {
+		} else if (!strncmp(argv[i], "src=", 4)) {
 			source_dir_name = argv[i] + 4;
 		}
 	}
@@ -113,7 +109,7 @@ bool open_output_file() {
 		return false;
 	}
 	fseek(output_file, block_size * (block_count - 1), SEEK_SET);
-	buf = calloc(1, block_size);
+	buf = (char*)calloc(1, block_size);
 	if (fwrite(buf, block_size, 1, output_file) == 0) {
 		fprintf(stderr, "Error: Could not create output file: %s\n", strerror(errno));
 		fclose(output_file);
@@ -135,14 +131,14 @@ void write_block(uint64 index, void *data, unsigned int count) {
 }
 
 void init_listfs_header() {
-	fs_header = calloc(block_size, 1);
+	fs_header = (listfs_header*)calloc(block_size, 1);
 	if (boot_loader_file_name) {
 		FILE *f;
 		f = fopen(boot_loader_file_name, "rb");
 		if (f) {
 			fread(fs_header, block_size, 1, f);
-			if (!feof(f)) {
-				char *buffer = calloc(block_size, 1);
+			if (!feof(f)){
+				char *buffer = (char*)calloc(block_size, 1);
 				int i = 1;
 				while (!feof(f)) {
 					fread(buffer, block_size, 1, f);
@@ -152,8 +148,7 @@ void init_listfs_header() {
 				}
 			}
 			fclose(f);
-		}
-		else
+		} else
 			fprintf(stderr, "Warning: Could not open boot loader file for reading. No boot loader will be installed.\n");
 	}
 	fs_header->magic = LISTFS_MAGIC;
@@ -194,7 +189,7 @@ void init_disk_map() {
 	fs_header->map_size = block_count / 8;
 	if (fs_header->map_size % block_size) fs_header->map_size += block_size;
 	fs_header->map_size /= block_size;
-	disk_map = calloc(block_size, fs_header->map_size);
+	disk_map = (char*)calloc(block_size, fs_header->map_size);
 	for (i = 0; i < fs_header->map_base + fs_header->map_size; i++) {
 		get_disk_block(i);
 	}
@@ -207,9 +202,9 @@ void store_disk_map() {
 
 uint64 store_file_data(FILE *file) {
 	if (feof(file)) return -1;
-	uint64 *block_list = malloc(block_size);
+	uint64 *block_list = (uint64*)malloc(block_size);
 	uint64 block_list_index = alloc_disk_block();
-	char *block_data = malloc(block_size);
+	char *block_data = (char*)malloc(block_size);
 	int i;
 	for (i = 0; i < (block_size / 8 - 1); i++) {
 		if (!feof(file)) {
@@ -221,8 +216,7 @@ uint64 store_file_data(FILE *file) {
 			uint64 block_index = alloc_disk_block();
 			block_list[i] = block_index;
 			write_block(block_index, block_data, 1);
-		}
-		else {
+		} else {
 			block_list[i] = -1;
 		}
 	}
@@ -246,15 +240,14 @@ uint64 process_dir(uint64 parent, char *dir_name) {
 		fprintf(stderr, "Warning: Could not read contents of directory '%s': %s\n", dir_name, strerror(errno));
 		return -1;
 	}
-	file_header = malloc(block_size);
+	file_header = (listfs_file_header*)malloc(block_size);
 	while (entry = readdir(dir)) {
 		if (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, "..")) continue;
 		cur_file = alloc_disk_block();
 		if (prev_file != -1) {
 			file_header->next = cur_file;
 			write_block(prev_file, file_header, 1);
-		}
-		else
+		} else
 			first_file = cur_file;
 		memset(file_header, 0, block_size);
 		file_header->prev = prev_file;
@@ -272,20 +265,17 @@ uint64 process_dir(uint64 parent, char *dir_name) {
 		if (S_ISDIR(file_stat.st_mode)) {
 			file_header->flags = 1;
 			file_header->data = process_dir(cur_file, file_name);
-		}
-		else if (S_ISREG(file_stat.st_mode)) {
+		} else if (S_ISREG(file_stat.st_mode)) {
 			FILE *f = fopen(file_name, "rb");
 			if (f) {
 				file_header->size = file_stat.st_size;
 				file_header->data = store_file_data(f);
 				fclose(f);
-			}
-			else {
+			} else {
 				fprintf(stderr, "Warning: Could not open file '%s' for reading!\n", file_name);
 				file_header->data = -1;
 			}
-		}
-		else {
+		} else {
 			fprintf(stderr, "Warning: File '%s' is not directory or regular file.\n", file_name);
 		}
 		prev_file = cur_file;
@@ -299,6 +289,7 @@ uint64 process_dir(uint64 parent, char *dir_name) {
 int main(int argc, char *argv[]) {
 	if (!get_commandline_options(argc, argv)) {
 		usage();
+
 		return 0;
 	}
 	if (!check_options()) return -1;
@@ -310,4 +301,4 @@ int main(int argc, char *argv[]) {
 	store_listfs_header();
 	close_output_file();
 	return 0;
-}
+} 
